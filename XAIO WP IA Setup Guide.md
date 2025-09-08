@@ -1,358 +1,323 @@
-# XAIO WP Information Architecture — Setup Guide
+# XAIO WordPress Information Architecture — ACF-Only Setup Guide (Free, v6.1+)
+
+> Goal: Model XAIO’s **Fact / Event / Report / Snippet / Evidence / Source / Info** types with **cross-linking** and **machine-friendly** permalinks using **ACF’s built-in Post Types & Taxonomies** plus **ACF Field Groups**.
+> Plugins required: **Advanced Custom Fields (Free)** only.
+
+---
 
 ## 0) Prerequisites
 
-1. **WordPress** (latest).
-
-2. **Plugins (free)**
-
-   * **Advanced Custom Fields** (ACF).
-   * **Custom Post Type UI** (CPT UI) — easiest way to register CPTs/taxonomies.
-   * *(Optional)* **WPGraphQL** + **WPGraphQL for ACF** — for clean APIs.
-   * *(Optional)* **Redirection** — keep canonical URLs if you ever rename slugs.
-
-3. **Permalinks**: Settings → Permalinks → **Post name**.
-
-> Note on ACF Free: You have **Post Object** and **Relationship** field types, but **Repeater** is **Pro-only**. In this guide we replace repeaters with either (a) separate CPTs or (b) plain text fields with clear, simple formatting.
+* WordPress (latest)
+* ACF Free **v6.1+** installed & active
+* Settings → Permalinks → **Post name**
+* (Optional) Version control: enable ACF Local JSON (Theme folder `acf-json/`) for auto-sync of fields/post types/taxonomies
 
 ---
 
-## 1) Register Custom Post Types (CPT UI)
+## 1) Create Custom Post Types (ACF → Post Types)
 
-Create these CPTs (menu: CPT UI → Add/Edit Post Types). For each, set:
+You’ll add the following CPTs. For each:
+**Location:** `ACF → Post Types → Add New`
+**Common settings:**
 
-* **Post Type Slug**: as listed below (lowercase).
-* **Plural Label** / **Singular Label**: shown below.
-* **Supports**: `title`, `editor`, `revisions`. (Disable comments.)
-* **Has Archive**: **true** for Fact, Event, Report, Snippet, Evidence, Source; **false** for Info (your choice).
-* **Show in REST API**: **true** (helps future API/LLM use).
-* **Rewrite**: **Slug equals the CPT slug** below.
+* **Singular/Plural Label:** as below
+* **Post Type Key (slug):** as below (lowercase)
+* **Visibility:** Public
+* **Has archive:** On (except `Info`, usually Off)
+* **Supports:** Title, Editor, Revisions (disable Comments)
+* **Show in REST API:** On
+* **Rewrite Slug:** match the CPT slug (e.g., `fact`, `event`)
 
-CPTs to create:
+### 1.1 Fact
 
-1. **Fact**
+* Key: `fact`
+* Purpose: atomic, validated claim
 
-* Slug: `fact`
-* Purpose: atomic, validated claim.
-* Archive: true
+### 1.2 Event
 
-2. **Event**
+* Key: `event`
+* Purpose: time/place-bounded aggregation of facts
 
-* Slug: `event`
-* Purpose: time/place-bounded collection of facts.
-* Archive: true
+### 1.3 Report
 
-3. **Report**
+* Key: `report`
+* Purpose: bundle of validated facts with optional (clearly labeled) analysis
 
-* Slug: `report`
-* Purpose: bundle of validated facts + optional context (clearly labeled).
-* Archive: true
+### 1.4 Snippet
 
-4. **Snippet**
+* Key: `snippet`
+* Purpose: ultra-compact factual update linking back to a Fact or Event
 
-* Slug: `snippet`
-* Purpose: ultra-compact factual update (links to Fact/Event).
-* Archive: true
+### 1.5 Evidence
 
-5. **Evidence**
+* Key: `evidence`
+* Purpose: single cited item (URL/document/media) reusable across many Facts/Events/Reports
 
-* Slug: `evidence`
-* Purpose: a single cited item reusable across Facts/Events/Reports.
-* Archive: true
+### 1.6 Source
 
-6. **Source**
+* Key: `source`
+* Purpose: canonical publisher/account (e.g., BBC, a specific journalist)
 
-* Slug: `source`
-* Purpose: canonical entity for publishers/accounts (BBC, a specific journalist).
-* Archive: true
+### 1.7 Organization *(optional)*
 
-7. **Organization** *(optional but recommended)*
+* Key: `organization`
+* Purpose: governments, agencies, media orgs, NGOs
 
-* Slug: `organization`
-* Purpose: governments, agencies, media orgs, NGOs.
-* Archive: true
+### 1.8 Contributor *(optional)*
 
-8. **Contributor** *(optional; add later if you want)*
+* Key: `contributor`
+* Purpose: citizen journalists, influencers, researchers
 
-* Slug: `contributor`
-* Purpose: citizen journalists, influencers, researchers.
-* Archive: true
+### 1.9 Info
 
-9. **Info**
+* Key: `info`
+* Purpose: site-level housekeeping (about, standards, policies, terms)
+* **Has archive:** Off (typical)
 
-* Slug: `info`
-* Purpose: site-level housekeeping (about, standards, policies, terms).
-* Archive: false (typically)
-
-> Tip: In “Menu Icon,” pick simple icons to keep the admin clean.
+> Tip: After adding CPTs, visit **Settings → Permalinks → Save** to flush rewrite rules.
 
 ---
 
-## 2) Register Custom Taxonomies (CPT UI)
+## 2) Create Custom Taxonomies (ACF → Taxonomies)
 
-Create these taxonomies (CPT UI → Add/Edit Taxonomies). For each, **show in REST**, enable “Hierarchical” only where noted, and attach to the listed CPTs.
+**Location:** `ACF → Taxonomies → Add New`
+**Common settings:**
 
-1. **Domain**
+* **Public:** On
+* **Show in REST API:** On
+* **Rewrite Slug:** match taxonomy key
+* Attach to CPTs as listed.
 
-* Taxonomy slug: `domain`
-* Hierarchical: **false**
+### 2.1 Domain
+
+* Key: `domain` (non-hierarchical)
 * Attach to: `fact`, `event`, `report`
 * Examples: `geopolitics`, `public_health`, `science`, `economics`
 
-2. **Geography**
+### 2.2 Geography
 
-* Slug: `geo`
-* Hierarchical: **true** (continent → country → region → city)
+* Key: `geo` (**hierarchical**)
 * Attach to: `fact`, `event`
+* Structure: Continent → Country → Region → City
 
-3. **Source Type**
+### 2.3 Source Type
 
-* Slug: `source_type`
-* Hierarchical: **false**
+* Key: `source_type` (non-hierarchical)
 * Attach to: `source`, `evidence`
 * Examples: `official_doc`, `dataset`, `peer_reviewed`, `news_org`, `research_institute`, `citizen_journalist`, `social_post`, `video`, `satellite`, `other`
 
-4. **Language** *(optional)*
+### 2.4 Language *(optional)*
 
-* Slug: `lang`
-* Hierarchical: **false**
+* Key: `lang` (non-hierarchical)
 * Attach to: `evidence`, `source`
 
-5. **Actor** *(optional)*
+### 2.5 Actor *(optional)*
 
-* Slug: `actor`
-* Hierarchical: **false**
+* Key: `actor` (non-hierarchical)
 * Attach to: `event`, `fact`, `report`
-* Use if you don’t want separate `Organization` CPT; otherwise keep this minimal.
 
 ---
 
-## 3) ACF Field Groups (ACF Free-compatible)
+## 3) Add ACF Field Groups (ACF → Field Groups)
 
-ACF → **Field Groups** → Add New. For each group, set **Location Rules** to the matching CPT. Use only free field types (Text, Textarea, URL, Number, True/False, Select, Date/Time Picker, Relationship, Post Object).
+> ACF Free does **not** include “Repeater” fields. Where repeatability helps, we’ll use **plain text** with “one per line” instructions or **relationships** between CPTs.
 
 ### 3.1 Fact — Field Group: “Fact Fields”
 
-* Location: **Post Type is equal to Fact**
+**Location rule:** Post Type = Fact
 
-Fields:
+| Field Label             | Type                                         | Notes                                    |
+| ----------------------- | -------------------------------------------- | ---------------------------------------- |
+| Claim Text              | Text (required)                              | One-sentence, atomic, time/place bounded |
+| Status                  | Select (required)                            | Choices: `validated` (default)           |
+| Corroboration Score (%) | Number (0–100)                               | Target ≥ 90%                             |
+| Evidence Links          | Relationship → Evidence (multiple, required) | Aim ≥ 10; search enabled                 |
+| Contradiction Links     | Relationship → Evidence (multiple)           | Credible dissent/qualifiers              |
+| Provenance Notes        | Textarea                                     | Archives, hashes, geo/chrono notes       |
+| Validator Signature     | Text                                         | e.g., `objAI:sha256:...` (+ reviewer ID) |
+| Last Validated At       | Date Time Picker                             |                                          |
+| Correction Issued       | True/False                                   | If true, show banner                     |
+| Correction Summary      | Textarea                                     | One concise line for banner              |
 
-1. **Claim Text** (Text, *required*)
-   Instruction: one-sentence, atomic, time/place-bounded.
-2. **Status** (Select, *required*)
-   Choices: `validated` (default). *(Publicly XAIO shows validated only.)*
-3. **Corroboration Score (%)** (Number, min 0, max 100)
-   Instruction: target ≥ 90%.
-4. **Evidence Links** (Relationship → **Evidence**, allow multiple, *required*, min 1, ideally ≥10)
-   Filters: search; Elements: show title.
-5. **Contradiction Links** (Relationship → **Evidence**, allow multiple)
-   Instruction: credible dissent or qualifying sources.
-6. **Provenance Notes** (Textarea)
-   Instruction: archives, hashes, geo/chrono notes.
-7. **Validator Signature** (Text)
-   Example: `objAI:sha256:...` (+ reviewer ID if used).
-8. **Last Validated At** (Date Time Picker)
-9. **Correction Issued** (True/False)
-   If true, display banner.
-10. **Correction Summary** (Textarea)
-    Instruction: concise explanation shown in banner.
-
-*(No repeater for change log; see §5.4 for a free-friendly approach.)*
+**Taxonomies to use on this CPT:** `domain` (+ `geo` where relevant)
 
 ---
 
 ### 3.2 Event — Field Group: “Event Fields”
 
-* Location: **Post Type is equal to Event**
+**Location rule:** Post Type = Event
 
-Fields:
+| Field Label            | Type                                               | Notes                                                 |
+| ---------------------- | -------------------------------------------------- | ----------------------------------------------------- |
+| Event Type             | Select                                             | e.g., protest, policy\_announcement, attack, election |
+| Start Time             | Date Time Picker                                   |                                                       |
+| End Time               | Date Time Picker                                   |                                                       |
+| Where (Latitude)       | Text                                               |                                                       |
+| Where (Longitude)      | Text                                               |                                                       |
+| Participants           | Relationship → Organization/Contributor (multiple) |                                                       |
+| Related Facts          | Relationship → Fact (multiple)                     |                                                       |
+| Timeline Notes (Plain) | Textarea                                           | One step per line, `YYYY-MM-DDTHH:MMZ — detail`       |
+| Validator Signature    | Text                                               |                                                       |
+| Last Validated At      | Date Time Picker                                   |                                                       |
+| Correction Issued      | True/False                                         |                                                       |
+| Correction Summary     | Textarea                                           |                                                       |
 
-1. **Event Type** (Select) — e.g., protest, policy\_announcement, attack, election.
-2. **Start Time** (Date Time Picker)
-3. **End Time** (Date Time Picker)
-4. **Where (Latitude)** (Text)
-5. **Where (Longitude)** (Text)
-6. **Participants** (Relationship → **Organization** or **Contributor**, multiple)
-7. **Related Facts** (Relationship → **Fact**, multiple, *recommended*)
-8. **Timeline Notes (Plain)** (Textarea)
-   *(Free-friendly alternative to repeater. One step per line, with ISO time prefix.)*
-9. **Validator Signature** (Text)
-10. **Last Validated At** (Date Time Picker)
-11. **Correction Issued** (True/False)
-12. **Correction Summary** (Textarea)
+**Taxonomies:** `geo`, `domain` (+ optional `actor`)
 
 ---
 
 ### 3.3 Report — Field Group: “Report Fields”
 
-* Location: **Post Type is equal to Report**
+**Location rule:** Post Type = Report
 
-Fields:
+| Field Label         | Type                           | Notes                              |
+| ------------------- | ------------------------------ | ---------------------------------- |
+| Executive Summary   | Textarea                       | Short factual bullets only         |
+| Facts Included      | Relationship → Fact (multiple) |                                    |
+| Analysis (Context)  | Textarea                       | Interpretation only; no new claims |
+| Validator Signature | Text                           |                                    |
+| Last Validated At   | Date Time Picker               |                                    |
+| Correction Issued   | True/False                     |                                    |
+| Correction Summary  | Textarea                       |                                    |
 
-1. **Executive Summary** (Textarea, *short factual bullets only*)
-2. **Facts Included** (Relationship → **Fact**, multiple, *recommended*)
-3. **Analysis (Context)** (Textarea)
-   Instruction: interpretation only; no new claims.
-4. **Validator Signature** (Text)
-5. **Last Validated At** (Date Time Picker)
-6. **Correction Issued** (True/False)
-7. **Correction Summary** (Textarea)
+**Taxonomies:** `domain` (+ optional `actor`)
 
 ---
 
 ### 3.4 Snippet — Field Group: “Snippet Fields”
 
-* Location: **Post Type is equal to Snippet**
+**Location rule:** Post Type = Snippet
 
-Fields:
-
-1. **Body (≤ 120 tokens)** (Textarea — set **Character Limit** e.g., 800 chars)
-2. **Parent Item** (Post Object → restrict to **Fact** or **Event**, single select)
-3. **Key Sources** (Relationship → **Evidence**, multiple)
+| Field Label         | Type                                          | Notes         |
+| ------------------- | --------------------------------------------- | ------------- |
+| Body (≤ 120 tokens) | Textarea (set character limit \~800)          | Ultra-compact |
+| Parent Item         | Post Object → limit to Fact or Event (single) |               |
+| Key Sources         | Relationship → Evidence (multiple)            | Optional      |
 
 ---
 
 ### 3.5 Evidence — Field Group: “Evidence Fields”
 
-* Location: **Post Type is equal to Evidence**
+**Location rule:** Post Type = Evidence
 
-Fields:
+| Field Label                     | Type                                    | Notes                                                         |
+| ------------------------------- | --------------------------------------- | ------------------------------------------------------------- |
+| Source Entity                   | Post Object → Source (single, required) |                                                               |
+| Original URL                    | URL (required)                          |                                                               |
+| Title (Verbatim or Neutralized) | Text                                    |                                                               |
+| Published At                    | Date Time Picker                        |                                                               |
+| Collected At                    | Date Time Picker                        |                                                               |
+| Archive URL                     | URL                                     |                                                               |
+| Media Hash                      | Text                                    | sha256 of file or of key frames                               |
+| Independence Key                | Text                                    | Owner/affiliate cluster tag                                   |
+| Excerpts (Plain)                | Textarea                                | One excerpt per line; include locator `(para 3)` or `(00:12)` |
+| Notes                           | Textarea                                |                                                               |
+| Is Correction                   | True/False                              |                                                               |
 
-1. **Source Entity** (Post Object → **Source**, single, *required*)
-2. **Original URL** (URL, *required*)
-3. **Title (Verbatim or Neutralized)** (Text)
-4. **Published At** (Date Time Picker)
-5. **Collected At** (Date Time Picker)
-6. **Archive URL** (URL)
-7. **Media Hash** (Text)
-   Instruction: sha256 of file or key frame set.
-8. **Independence Key** (Text)
-   Instruction: group/owner/affiliate cluster tag.
-9. **Excerpts (Plain)** (Textarea)
-   Instruction: one excerpt per line; include locator in parentheses, e.g., `“…quote…” (para 3)`
-10. **Notes** (Textarea)
-11. **Is Correction** (True/False)
-
-*(Free-friendly: “Excerpts” uses plain text instead of a repeater.)*
+**Taxonomies:** `source_type`, `lang` (optional)
 
 ---
 
 ### 3.6 Source — Field Group: “Source Fields”
 
-* Location: **Post Type is equal to Source**
+**Location rule:** Post Type = Source
 
-Fields:
+| Field Label              | Type                                | Notes                                         |
+| ------------------------ | ----------------------------------- | --------------------------------------------- |
+| Display Name             | Text (required)                     |                                               |
+| Owner Organization       | Post Object → Organization (single) | Optional                                      |
+| Official Handles (Plain) | Textarea                            | One URL per line (site, X, YouTube, Telegram) |
+| Disclosures              | Textarea                            |                                               |
 
-1. **Display Name** (Text, *required*)
-2. **Source Type** → *use taxonomy `source_type` on the post* (no field needed)
-3. **Owner Organization** (Post Object → **Organization**, single)
-4. **Official Handles (Plain)** (Textarea)
-   Instruction: one URL per line (site, X/Twitter, YouTube, Telegram, etc.).
-5. **Disclosures** (Textarea)
-
----
-
-### 3.7 Organization — Field Group: “Organization Fields” *(optional)*
-
-* Location: **Post Type is equal to Organization**
-
-Fields:
-
-1. **Official Name** (Text, *required*)
-2. **Aliases (Plain)** (Textarea) — one alias per line
-3. **Country** (Text)
-4. **Ownership Cluster ID** (Text)
+**Taxonomies:** `source_type`, `lang` (optional)
 
 ---
 
-### 3.8 Contributor — Field Group: “Contributor Fields” *(optional)*
+### 3.7 Organization *(optional)* — Field Group: “Organization Fields”
 
-* Location: **Post Type is equal to Contributor**
+**Location rule:** Post Type = Organization
 
-Fields:
-
-1. **Profile Links (Plain)** (Textarea) — one URL per line (socials, website)
-2. **Disclosures** (Textarea)
-3. **Status** (Select: active, suspended, retired)
-
----
-
-### 3.9 Info — Field Group: *(optional)*
-
-* Usually just use the Block Editor. If desired, add a **Short Description** (Text) to standardize intros.
+| Field Label          | Type            | Notes              |
+| -------------------- | --------------- | ------------------ |
+| Official Name        | Text (required) |                    |
+| Aliases (Plain)      | Textarea        | One alias per line |
+| Country              | Text            |                    |
+| Ownership Cluster ID | Text            |                    |
 
 ---
 
-## 4) Permalinks & Date-Prefixed Slugs
+### 3.8 Contributor *(optional)* — Field Group: “Contributor Fields”
 
-Use short, semantic, stable slugs. For Facts/Events/Reports/Snippets, prefix with date `YYYY-MM-DD-`.
+**Location rule:** Post Type = Contributor
 
-Add this snippet to your theme’s `functions.php` (or a small site plugin) to **auto-prefix** on save:
+| Field Label           | Type     | Notes                            |
+| --------------------- | -------- | -------------------------------- |
+| Profile Links (Plain) | Textarea | One URL per line                 |
+| Disclosures           | Textarea |                                  |
+| Status                | Select   | `active`, `suspended`, `retired` |
+
+---
+
+## 4) Permalink Strategy (date-prefixed slugs)
+
+**Recommended:** For `fact`, `event`, `report`, `snippet`, use `YYYY-MM-DD-short-slug`.
+ACF’s CPT UI doesn’t enforce slug prefixes automatically. Add this small snippet to your theme’s `functions.php` (or a tiny site plugin) to auto-prefix on save:
 
 ```php
-add_action('save_post', function($post_id) {
-  $post = get_post($post_id);
-  if (!$post || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)) return;
+add_action('wp_insert_post', function($post_id, $post, $update){
+  if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
 
-  $types = ['fact','event','report','snippet']; // CPTs to prefix
+  $types = ['fact','event','report','snippet'];
   if (!in_array($post->post_type, $types, true)) return;
 
-  // Only on first publish or when slug empty
-  if ('auto-draft' === $post->post_status) return;
-
-  $slug = $post->post_name;
   $date = get_the_date('Y-m-d', $post_id);
-  if (!$date) $date = current_time('Y-m-d');
+  if (!$date || $post->post_status === 'draft') $date = current_time('Y-m-d');
 
-  // Avoid double-prefixing
-  if (strpos($slug, $date . '-') !== 0) {
-    $base = sanitize_title(substr($post->post_title, 0, 120));
-    $new_slug = sanitize_title($date . '-' . $base);
-    // Ensure uniqueness
-    $unique = wp_unique_post_slug($new_slug, $post_id, $post->post_status, $post->post_type, $post->post_parent);
-    remove_action('save_post', __FUNCTION__);
-    wp_update_post(['ID' => $post_id, 'post_name' => $unique]);
-    add_action('save_post', __FUNCTION__);
-  }
-});
+  $slug = $post->post_name ?: sanitize_title($post->post_title);
+  if (strpos($slug, $date . '-') === 0) return;
+
+  $new_slug = sanitize_title($date . '-' . substr($slug, 0, 120));
+  $unique   = wp_unique_post_slug($new_slug, $post_id, $post->post_status, $post->post_type, $post->post_parent);
+
+  // prevent loops
+  remove_action('wp_insert_post', __FUNCTION__, 10);
+  wp_update_post(['ID' => $post_id, 'post_name' => $unique]);
+  add_action('wp_insert_post', __FUNCTION__, 10, 3);
+}, 10, 3);
 ```
+
+Then visit **Settings → Permalinks → Save**.
 
 ---
 
-## 5) Templates & Display (Theme)
+## 5) Template Display (minimal, machine-first)
 
-Create minimal templates per CPT in your (child) theme:
+Create (in your theme) `single-{cpt}.php` files to render **neutral, structured** pages. Suggested order:
 
-* `single-fact.php`, `single-event.php`, `single-report.php`, `single-snippet.php`, `single-evidence.php`, `single-source.php`, `single-info.php`
-* Archives (optional): `archive-fact.php`, etc.
+### 5.1 Fact (`single-fact.php`)
 
-### 5.1 Fact — minimal display logic
-
-**Fields to render (in order):**
-
-* Title (match Claim Text or keep Title concise)
-* **Status** (badge “validated”)
-* **Corroboration Score**
-* **Last Validated At**
-* **Correction Banner** (if `correction_issued` true → show `correction_summary`)
+* Title (concise; mirror Claim)
+* **Status** (badge: “validated”)
+* **Corroboration Score**; **Last Validated At**
+* **Correction Banner** (if `Correction Issued` → show `Correction Summary`)
 * **Claim Text**
-* **Scope** (print `domain` terms and `geo` terms if set; show absolute dates from post date if relevant)
-* **Evidence list** (loop over Relationship)
+* **Scope**: print `domain` + `geo` term(s)
+* **Evidence List** (Relationship → Evidence)
 * **Contradictions** (if any)
 * **Provenance Notes**
 * **Validator Signature**
-* **JSON-LD** (see §6)
+* **JSON-LD** (see §7)
 
-**Evidence list** sample (inside `single-fact.php`):
+Evidence loop example:
 
 ```php
 $evidence = get_field('evidence_links');
 if ($evidence) {
   echo '<h3>Key Evidence</h3><ol>';
   foreach ($evidence as $ev) {
-    $url = get_field('original_url', $ev->ID);
-    $title = get_field('title_verb_neutral', $ev->ID) ?: get_the_title($ev->ID);
-    $pub = get_field('published_at', $ev->ID);
+    $url   = get_field('original_url', $ev->ID);
+    $title = get_field('title_verb_or_neutral', $ev->ID) ?: get_the_title($ev->ID);
+    $pub   = get_field('published_at', $ev->ID);
     echo '<li><a href="'.esc_url($url).'" rel="noopener nofollow">'.$title.'</a>';
     if ($pub) echo ' — '.esc_html($pub);
     echo '</li>';
@@ -361,86 +326,41 @@ if ($evidence) {
 }
 ```
 
-*(If you used a different field name for Title, adjust accordingly.)*
+### 5.2 Event (`single-event.php`)
 
-### 5.2 Event — display logic
+* Header: type, start–end time, lat/long
+* **Related Facts** (list)
+* **Timeline Notes (Plain)**: split lines, print in order
+* **Participants** (Organizations/Contributors)
+* **JSON-LD** (`Event` schema)
 
-* Header: type, start–end time, lat/long (if provided)
-* **Related Facts** (loop Relationship → list)
-* **Timeline Notes (Plain)**: split by newline and print in order
-* **Participants** (Organizations/Contributors linked)
-* **JSON-LD** (Event schema, §6)
+### 5.3 Report (`single-report.php`)
 
-### 5.3 Report — display logic
-
-* **Executive Summary** (bullets)
+* **Executive Summary**
 * **Facts Included** (linked list)
 * **Analysis (Context)** (clearly labeled)
-* **JSON-LD** (Collection/Breadcrumb, §6)
+* **JSON-LD** (Collection/CreativeWork)
 
-### 5.4 Change Log (ACF Free workaround)
-
-You can skip custom UI and rely on:
-
-* **Correction Banner + Summary** on the post (fields already added)
-* **Native WP Revisions** (show a “Revisions” link)
-* *(Optional)* Create a simple CPT **Change** with fields `{related_post (Post Object), at (DateTime), summary (Textarea), editor (Text)}` to show a table on the page. This is optional and can be added later.
+*(Create similar minimal templates for Snippet/Evidence/Source/Info.)*
 
 ---
 
-## 6) JSON-LD (SEO/LLM)
+## 6) Cross-Linking Patterns
 
-Add compact JSON-LD in your templates. Example for **Fact** (ClaimReview-style):
+* **Fact ↔ Evidence**: Relationship on Fact to multiple Evidence
+* **Evidence → Source**: Post Object (single)
+* **Event ↔ Fact**: Relationship on Event to multiple Facts
+* **Report ↔ Fact**: Relationship on Report to multiple Facts
+* **Snippet → Parent**: Post Object to Fact or Event
 
-```php
-<?php
-$claim = get_field('claim_text');
-$validated = get_field('status') === 'validated';
-$date = get_field('last_validated_at') ?: get_the_modified_date('c');
-$permalink = get_permalink();
-$org_name = 'XAIO';
-
-$data = [
-  '@context' => 'https://schema.org',
-  '@type'    => 'ClaimReview',
-  'url'      => $permalink,
-  'claimReviewed' => $claim,
-  'datePublished' => $date,
-  'author' => ['@type' => 'Organization', 'name' => $org_name],
-  'reviewRating' => [
-    '@type' => 'Rating',
-    'ratingValue' => $validated ? 1 : 0,
-    'bestRating' => 1,
-    'worstRating' => 0,
-    'alternateName' => $validated ? 'validated' : 'unpublished'
-  ]
-];
-?>
-<script type="application/ld+json">
-<?php echo wp_json_encode($data, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT); ?>
-</script>
-```
-
-For **Event**, use `@type: "Event"` with `startDate`, `endDate`, `location` (Place with geo coordinates). For **Report**, a simple `@type: "CreativeWork"` or a collection pattern is fine.
-
----
-
-## 7) Cross-Linking Patterns (Queries)
-
-* **Fact → Evidence**: you already have a direct Relationship field.
-* **Evidence → Source**: Post Object field (single).
-* **Report → Facts**: Relationship field.
-* **Event → Facts**: Relationship field.
-* **Snippet → Parent**: Post Object restricted to Fact/Event.
-
-**Reverse lookup** (e.g., show “Used in these Facts” on an Evidence page): query posts where `evidence_links` meta contains this Evidence ID.
+**Reverse lookup** example (show “Used in Facts” on Evidence page):
 
 ```php
 $used_in = new WP_Query([
-  'post_type' => 'fact',
+  'post_type'      => 'fact',
   'posts_per_page' => 10,
-  'meta_query' => [[
-    'key'     => 'evidence_links',   // ACF stores relationship IDs in serialized meta
+  'meta_query'     => [[
+    'key'     => 'evidence_links',   // ACF stores relationship IDs serialized
     'value'   => '"' . get_the_ID() . '"',
     'compare' => 'LIKE'
   ]]
@@ -455,97 +375,70 @@ if ($used_in->have_posts()) {
 }
 ```
 
-*(This “LIKE” approach is standard for ACF Relationship reverse queries. For scale, consider a custom linker table later.)*
-
 ---
 
-## 8) Taxonomy Hygiene
+## 7) JSON-LD (compact, retrieval-oriented)
 
-* **Domain** on Facts/Events/Reports (multi-select).
-* **Geo** on Facts/Events (hierarchical).
-* **Source Type** on Sources and Evidence.
-* **Language** on Evidence (if helpful).
-
-Keep terms lowercase, hyphenated slugs, no spaces. Curate a small canonical set to avoid drift.
-
----
-
-## 9) Editorial Workflow (How to Add Content)
-
-### Add a **Source**
-
-* Add → Source
-* Set **Display Name**, select **Source Type**, link **Owner Organization** (if any), add **Official Handles** (one per line), add **Disclosures**.
-
-### Add **Evidence**
-
-* Add → Evidence
-* Set **Source Entity**, **Original URL**, **Title**, **Published At**, **Archive URL**, **Independence Key**, **Excerpts (Plain)** (one per line), **Notes**.
-* Set **Language** taxonomy if used.
-
-### Add a **Fact**
-
-* Add → Fact
-* Title: short (can mirror Claim).
-* Fill **Claim Text**, **Corroboration Score**, **Evidence Links** (≥10 ideally), **Contradiction Links** if any, **Provenance Notes**, **Validator Signature**, **Last Validated At**.
-* Set **Domain** (+ **Geo** if relevant).
-* Publish → the slug auto-prefixes with date.
-
-### Add an **Event**
-
-* Add → Event
-* Fill **Event Type**, **Start/End Time**, **Lat/Long**, **Participants**, **Related Facts**, **Timeline Notes (Plain)**.
-* Set **Geo** and **Domain**.
-
-### Add a **Report**
-
-* Add → Report
-* Fill **Executive Summary**, **Facts Included**, **Analysis** (clearly labeled), **Validator Signature**, **Last Validated At**.
-* Set **Domain**.
-
-### Add a **Snippet**
-
-* Add → Snippet
-* Fill **Body**, **Parent Item** (Fact/Event), **Key Sources** (if any).
-* Publish.
-
-### Add **Info** pages
-
-* Add → Info
-* Use Block Editor for About, Standards, Policies, Terms.
-
----
-
-## 10) Optional Tweaks
-
-* **Noindex for Evidence** (if you want to keep them crawlable but not indexed):
-  In `functions.php`:
+**Fact (ClaimReview-style):**
 
 ```php
-add_action('wp_head', function() {
-  if (is_singular('evidence')) {
-    echo '<meta name="robots" content="noindex,follow">';
-  }
-});
+<?php
+$claim = get_field('claim_text');
+$validated = get_field('status') === 'validated';
+$date = get_field('last_validated_at') ?: get_the_modified_date('c');
+$permalink = get_permalink();
+$data = [
+  '@context' => 'https://schema.org',
+  '@type'    => 'ClaimReview',
+  'url'      => $permalink,
+  'claimReviewed' => $claim,
+  'datePublished' => $date,
+  'author' => ['@type' => 'Organization', 'name' => 'XAIO'],
+  'reviewRating' => [
+    '@type' => 'Rating',
+    'ratingValue' => $validated ? 1 : 0,
+    'bestRating' => 1,
+    'worstRating' => 0,
+    'alternateName' => $validated ? 'validated' : 'unpublished'
+  ]
+];
+?>
+<script type="application/ld+json">
+<?php echo wp_json_encode($data, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT); ?>
+</script>
 ```
 
-* **Sitemaps**: ensure your SEO or core sitemap includes CPT archives you want indexed (Facts, Events, Reports, Snippets, Sources).
-* **Admin columns**: add ACF columns (status, corroboration score) for quick triage.
+**Event:** use `@type: "Event"` with `startDate`, `endDate`, `location` (Place → GeoCoordinates).
+**Report:** `@type: "CreativeWork"` (or collection pattern) with links to Facts.
 
 ---
 
-## 11) Consistency Rules (House Style)
+## 8) Editorial Workflow (what your team clicks)
 
-* Slugs: lowercase, hyphenated, no stop words unless essential.
-* Date-prefix for Fact/Event/Report/Snippet: enforced by the save hook.
-* Titles: concise, factual, time-bounded where appropriate.
-* “Correction Issued”: must be true + summary if any factual amendment is made.
-* **Wikipedia**: do not cite the article; cite the underlying sources.
+**Add a Source** → set Display Name, Source Type (taxonomy), Owner Org (optional), Official Handles (one per line), Disclosures.
+**Add Evidence** → link Source Entity, enter Original URL, Title, Published/Collected times, Archive URL, Independence Key, Excerpts (one per line), Notes, `source_type`/`lang`.
+**Add Fact** → fill Claim Text, Corroboration Score, Evidence Links (≥10 ideally), Contradictions (if any), Provenance Notes, Validator Signature, Last Validated At; set `domain` (+ `geo` if relevant).
+**Add Event** → fill Event Type, Start/End, Lat/Long, Participants, Related Facts, Timeline Notes; set `geo` & `domain`.
+**Add Report** → fill Executive Summary, Facts Included, Analysis; set `domain`.
+**Add Snippet** → Body, Parent Item (Fact/Event), Key Sources (optional).
+**Add Info** → freeform (About/Standards/Policies/Terms).
 
 ---
 
-## 12) Future-Proofing
+## 9) Consistency Rules (house style)
 
-* If relationships become heavy, migrate reverse lookups to a custom linker table or use WPGraphQL with resolvers.
-* For timelines and change logs, you can later switch to ACF Pro repeaters or purpose-built CPTs (`timeline_step`, `change_entry`).
-* Add a small `/wp-json/xaio/v1/...` endpoint that returns compact JSON (AIO-friendly) for each CPT when you’re ready.
+* Slugs: **lowercase**, **hyphenated**, avoid stop words unless essential
+* **Date prefix** enforced for `fact|event|report|snippet` (code in §4)
+* Titles: concise, factual, time-bounded where relevant
+* “Correction Issued”: set True + provide **Correction Summary**
+* **Wikipedia**: do **not** cite; cite the underlying sources instead
+
+---
+
+## 10) Portability (ACF Local JSON / Export)
+
+* Create `/wp-content/themes/your-theme/acf-json/`
+* ACF will auto-save JSON for **Field Groups, Post Types, and Taxonomies** when you click **Save**
+* Commit these JSON files to Git for reproducible environments
+* You can also **Export to PHP** from ACF for hard-coding the model later
+
