@@ -22,7 +22,7 @@
 
 ### What “Community Projects” mean at Fabled Sky
 
-Fabled Sky Community Projects are **passion projects** incubated by Fabled Sky employees and supported by a high‑signal volunteer network. They are **pro bono** by intent: Fabled Sky may contribute essential infrastructure (e.g., domain, hosting, and light ops), but **most of the legwork is contributed by volunteers and employees on their own time**. Projects must be **non‑profit in spirit and public‑benefit in outcome**—and they exist to serve society before any commercial interest.
+Fabled Sky Community Projects are **passion projects** incubated by Fabled Sky employees and supported by a high‑signal volunteer network. They are **pro bono** by intent: Fabled Sky may contribute essential infrastructure (e.g., domain, hosting, and light ops), but **most of the legwork is contributed by volunteers and employees on their own time**. Projects must be **non‑profit in spirit and public‑benefit in outcome**—and they exist to serve society before any commercial interest. ([Fabled Sky Research][6])
 
 This DNA traces back to our **BTLF‑era mission**—open access, radical transparency, and the foundational rights of the internet. Today, that ethos lives on in how we choose, design, and steward community projects. ([Fabled Sky Research][1])
 
