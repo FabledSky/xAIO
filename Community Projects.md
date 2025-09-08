@@ -146,3 +146,4 @@ Fabled Sky Research is a research and technology organization whose origins trac
 [3]: https://aio.fabledsky.com/standard/aio-standards-framework-module-5-licensing-governance-charter/ "AIO Standards Framework — Module 5: Licensing & Governance Charter – AIO Standards & Frameworks – Fabled Sky Research"
 [4]: https://fabledsky.com/objectivity-ai/ "Objectivity AI - Fabled Sky Research"
 [5]: https://fabledsky.com/csr/ "Corporate Social Responsibility (CSR) - Fabled Sky Research"
+[6]: https://fabledsky.com/community-projects/ "Community Projects - Fabled Sky Research"
