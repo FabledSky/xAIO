@@ -1,0 +1,277 @@
+{
+  "key": "group_xaio_event_fields",
+  "title": "Event Fields",
+  "fields": [
+    {
+      "key": "field_xaio_event_type",
+      "label": "Event Type",
+      "name": "event_type",
+      "type": "select",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "protest": "protest",
+        "policy_announcement": "policy_announcement",
+        "attack": "attack",
+        "election": "election",
+        "other": "other"
+      },
+      "default_value": "",
+      "allow_null": 0,
+      "multiple": 0,
+      "ui": 1,
+      "ajax": 0,
+      "return_format": "value",
+      "placeholder": ""
+    },
+    {
+      "key": "field_xaio_event_start_time",
+      "label": "Start Time",
+      "name": "start_time",
+      "type": "date_time_picker",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "display_format": "Y-m-d H:i:s",
+      "return_format": "Y-m-d H:i:s",
+      "first_day": 1
+    },
+    {
+      "key": "field_xaio_event_end_time",
+      "label": "End Time",
+      "name": "end_time",
+      "type": "date_time_picker",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "display_format": "Y-m-d H:i:s",
+      "return_format": "Y-m-d H:i:s",
+      "first_day": 1
+    },
+    {
+      "key": "field_xaio_event_lat",
+      "label": "Where (Latitude)",
+      "name": "where_lat",
+      "type": "text",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_xaio_event_lng",
+      "label": "Where (Longitude)",
+      "name": "where_lng",
+      "type": "text",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_xaio_event_participants",
+      "label": "Participants",
+      "name": "participants",
+      "type": "relationship",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "post_type": [
+        "organization",
+        "contributor"
+      ],
+      "taxonomy": [],
+      "filters": [
+        "search"
+      ],
+      "elements": "",
+      "min": "",
+      "max": "",
+      "return_format": "object"
+    },
+    {
+      "key": "field_xaio_event_related_facts",
+      "label": "Related Facts",
+      "name": "related_facts",
+      "type": "relationship",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "post_type": [
+        "fact"
+      ],
+      "taxonomy": [],
+      "filters": [
+        "search"
+      ],
+      "elements": "",
+      "min": "",
+      "max": "",
+      "return_format": "object"
+    },
+    {
+      "key": "field_xaio_event_timeline_plain",
+      "label": "Timeline Notes (Plain)",
+      "name": "timeline_notes_plain",
+      "type": "textarea",
+      "instructions": "One step per line, `YYYY-MM-DDTHH:MMZ — detail`.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "",
+      "rows": "",
+      "new_lines": ""
+    },
+    {
+      "key": "field_xaio_event_validator_signature",
+      "label": "Validator Signature",
+      "name": "validator_signature",
+      "type": "text",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_xaio_event_last_validated_at",
+      "label": "Last Validated At",
+      "name": "last_validated_at",
+      "type": "date_time_picker",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "display_format": "Y-m-d H:i:s",
+      "return_format": "Y-m-d H:i:s",
+      "first_day": 1
+    },
+    {
+      "key": "field_xaio_event_correction_issued",
+      "label": "Correction Issued",
+      "name": "correction_issued",
+      "type": "true_false",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 0,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_xaio_event_correction_summary",
+      "label": "Correction Summary",
+      "name": "correction_summary",
+      "type": "textarea",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_xaio_event_correction_issued",
+            "operator": "==",
+            "value": "1"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "",
+      "rows": "",
+      "new_lines": ""
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "event"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0,
+  "modified": 1757366767
+}

@@ -1,0 +1,92 @@
+{
+  "key": "group_xaio_snippet_fields",
+  "title": "Snippet Fields",
+  "fields": [
+    {
+      "key": "field_xaio_snippet_body",
+      "label": "Body (≤ 120 tokens)",
+      "name": "body",
+      "type": "textarea",
+      "instructions": "Ultra-compact; keep ≤ ~800 characters.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "800",
+      "rows": "",
+      "new_lines": ""
+    },
+    {
+      "key": "field_xaio_snippet_parent",
+      "label": "Parent Item",
+      "name": "parent_item",
+      "type": "post_object",
+      "instructions": "Select the related Fact or Event.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "post_type": [
+        "fact",
+        "event"
+      ],
+      "taxonomy": "",
+      "allow_null": 0,
+      "multiple": 0,
+      "return_format": "object",
+      "ui": 1
+    },
+    {
+      "key": "field_xaio_snippet_key_sources",
+      "label": "Key Sources",
+      "name": "key_sources",
+      "type": "relationship",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "post_type": [
+        "evidence"
+      ],
+      "taxonomy": [],
+      "filters": [
+        "search"
+      ],
+      "elements": "",
+      "min": "",
+      "max": "",
+      "return_format": "object"
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "snippet"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0,
+  "modified": 1757366767
+}

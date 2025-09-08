@@ -1,0 +1,89 @@
+{
+  "key": "group_xaio_contributor_fields",
+  "title": "Contributor Fields",
+  "fields": [
+    {
+      "key": "field_xaio_contrib_profile_links_plain",
+      "label": "Profile Links (Plain)",
+      "name": "profile_links_plain",
+      "type": "textarea",
+      "instructions": "One URL per line.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "",
+      "rows": "",
+      "new_lines": ""
+    },
+    {
+      "key": "field_xaio_contrib_disclosures",
+      "label": "Disclosures",
+      "name": "disclosures",
+      "type": "textarea",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "",
+      "rows": "",
+      "new_lines": ""
+    },
+    {
+      "key": "field_xaio_contrib_status",
+      "label": "Status",
+      "name": "status",
+      "type": "select",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "active": "active",
+        "suspended": "suspended",
+        "retired": "retired"
+      },
+      "default_value": "active",
+      "allow_null": 0,
+      "multiple": 0,
+      "ui": 1,
+      "ajax": 0,
+      "return_format": "value",
+      "placeholder": ""
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "contributor"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0,
+  "modified": 1757366767
+}

@@ -1,0 +1,240 @@
+{
+  "key": "group_xaio_fact_fields",
+  "title": "Fact Fields",
+  "fields": [
+    {
+      "key": "field_xaio_fact_claim_text",
+      "label": "Claim Text",
+      "name": "claim_text",
+      "type": "text",
+      "instructions": "One-sentence, atomic, time/place bounded.",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_xaio_fact_status",
+      "label": "Status",
+      "name": "status",
+      "type": "select",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "choices": {
+        "validated": "validated"
+      },
+      "default_value": "validated",
+      "allow_null": 0,
+      "multiple": 0,
+      "ui": 1,
+      "ajax": 0,
+      "return_format": "value",
+      "placeholder": ""
+    },
+    {
+      "key": "field_xaio_fact_corroboration_score",
+      "label": "Corroboration Score (%)",
+      "name": "corroboration_score",
+      "type": "number",
+      "instructions": "Target ≥ 90%.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "step": 1,
+      "min": 0,
+      "max": 100
+    },
+    {
+      "key": "field_xaio_fact_evidence_links",
+      "label": "Evidence Links",
+      "name": "evidence_links",
+      "type": "relationship",
+      "instructions": "Select all supporting Evidence items (aim ≥ 10).",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "post_type": [
+        "evidence"
+      ],
+      "taxonomy": [],
+      "filters": [
+        "search"
+      ],
+      "elements": "",
+      "min": "",
+      "max": "",
+      "return_format": "object"
+    },
+    {
+      "key": "field_xaio_fact_contradictions",
+      "label": "Contradiction Links",
+      "name": "contradiction_links",
+      "type": "relationship",
+      "instructions": "Credible dissent/qualifiers.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "post_type": [
+        "evidence"
+      ],
+      "taxonomy": [],
+      "filters": [
+        "search"
+      ],
+      "elements": "",
+      "min": "",
+      "max": "",
+      "return_format": "object"
+    },
+    {
+      "key": "field_xaio_fact_provenance_notes",
+      "label": "Provenance Notes",
+      "name": "provenance_notes",
+      "type": "textarea",
+      "instructions": "Archives, hashes, geo/chrono notes.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "",
+      "rows": "",
+      "new_lines": ""
+    },
+    {
+      "key": "field_xaio_fact_validator_signature",
+      "label": "Validator Signature",
+      "name": "validator_signature",
+      "type": "text",
+      "instructions": "e.g., objAI:sha256:... (+ reviewer ID).",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_xaio_fact_last_validated_at",
+      "label": "Last Validated At",
+      "name": "last_validated_at",
+      "type": "date_time_picker",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "display_format": "Y-m-d H:i:s",
+      "return_format": "Y-m-d H:i:s",
+      "first_day": 1
+    },
+    {
+      "key": "field_xaio_fact_correction_issued",
+      "label": "Correction Issued",
+      "name": "correction_issued",
+      "type": "true_false",
+      "instructions": "If true, a banner will display.",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "message": "",
+      "default_value": 0,
+      "ui": 1,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_xaio_fact_correction_summary",
+      "label": "Correction Summary",
+      "name": "correction_summary",
+      "type": "textarea",
+      "instructions": "One concise line for the correction banner.",
+      "required": 0,
+      "conditional_logic": [
+        [
+          {
+            "field": "field_xaio_fact_correction_issued",
+            "operator": "==",
+            "value": "1"
+          }
+        ]
+      ],
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "maxlength": "",
+      "rows": "",
+      "new_lines": ""
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "fact"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": true,
+  "description": "",
+  "show_in_rest": 0,
+  "modified": 1757366767
+}
